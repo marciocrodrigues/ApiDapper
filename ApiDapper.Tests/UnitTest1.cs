@@ -1,3 +1,4 @@
+using ApiDapper.Domain.StoreContext.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiDapper.Tests
@@ -8,6 +9,7 @@ namespace ApiDapper.Tests
         [TestMethod]
         public void TestMethod1()
         {
+           
         }
     }
 }
