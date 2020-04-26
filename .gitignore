@@ -1,0 +1,17 @@
+.vscode
+.vs
+
+ApiDapper.Api/bin
+ApiDapper.Api/obj
+
+ApiDapper.Domain/bin
+ApiDapper.Domain/obj
+
+ApiDapper.Infra/bin
+ApiDapper.Infra/obj
+
+ApiDapper.Shared/bin
+ApiDapper.Shared/obj
+
+ApiDapper.Tests/bin
+ApiDapper.Tests/obj
