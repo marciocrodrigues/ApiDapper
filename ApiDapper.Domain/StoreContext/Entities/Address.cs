@@ -1,8 +1,9 @@
 using ApiDapper.Domain.StoreContext.Enums;
+using FluentValidator;
 
 namespace ApiDapper.Domain.StoreContext.Entities
 {
-    public class Address
+    public class Address : Notifiable
     {
         public Address(string street,
                        string number,
