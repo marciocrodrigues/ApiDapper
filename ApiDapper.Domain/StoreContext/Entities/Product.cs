@@ -25,6 +25,11 @@ namespace ApiDapper.Domain.StoreContext.Entities
         public override string ToString()
         {
             return Title;
+        }
+
+        public void DecreaseQuantity(decimal quantity)
+        {
+            QuantityOnHand -= quantity;
         } 
     }
 }
