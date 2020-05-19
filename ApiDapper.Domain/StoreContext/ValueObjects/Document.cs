@@ -7,17 +7,17 @@ namespace ApiDapper.Domain.StoreContext.ValueObjects
     {
         public Document(string number)
         {
-            Numbem = number;
+            Number = number;
 
             AddNotifications(new ValidationContract()
-                .IsTrue(Validate(Numbem), "Document", "CPF inválido")
+                .IsTrue(Validate(Number), "Document", "CPF inválido")
             );
         }
-        public string Numbem { get; set; }
+        public string Number { get; set; }
 
         public override string ToString()
         {
-            return Numbem;
+            return Number;
         }
 
         public bool Validate(string cpf)
