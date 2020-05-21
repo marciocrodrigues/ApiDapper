@@ -1,9 +1,10 @@
 
+using ApiDapper.Shared.Entities;
 using FluentValidator;
 
 namespace ApiDapper.Domain.StoreContext.Entities
 {
-    public class OrderItem : Notifiable
+    public class OrderItem : Entity
     {
         public OrderItem(Product product, decimal quantity)
         {

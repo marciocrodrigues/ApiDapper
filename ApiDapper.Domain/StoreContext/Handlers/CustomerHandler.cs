@@ -2,6 +2,8 @@ using System;
 using ApiDapper.Domain.StoreContext.Commands.CustomerCommands.Outputs;
 using ApiDapper.Domain.StoreContext.CustomerCommands.Inputs;
 using ApiDapper.Domain.StoreContext.Entities;
+using ApiDapper.Domain.StoreContext.Repositories;
+using ApiDapper.Domain.StoreContext.Services;
 using ApiDapper.Domain.StoreContext.ValueObjects;
 using ApiDapper.Shared.Commands;
 using FluentValidator;
@@ -13,12 +15,22 @@ namespace ApiDapper.Domain.StoreContext.Handlers
     ICommandHandler<CreateCustomerCommand>,
     ICommandHandler<AddAddressCommand>
   {
+    private readonly ICustomerRepository _repository;
+    private readonly IEmailService _emailService;
+    public CustomerHandler(ICustomerRepository repository, IEmailService emailService)
+    {
+      _repository   = repository;
+      _emailService = emailService;
+    }
     public ICommandResult Handle(CreateCustomerCommand command)
     {
       // Verificar se o CPF já existe na base
-
-      // Verificar se o E-mail já existe na base
+      if(_repository.CheckDocument(command.Document))
+        AddNotification("Document", "Este CPF já está em uso");
       
+      // Verificar se o E-mail já existe na base
+      if(_repository.CheckEmail(command.Email))
+        AddNotification("Email", "Este E-mail já está em uso");
       // Criar os VOs
       var name = new Name(command.FirstName, command.LastName);
       var document = new Document(command.Document);
@@ -33,13 +45,17 @@ namespace ApiDapper.Domain.StoreContext.Handlers
       AddNotifications(email.Notifications);
       AddNotifications(customer.Notifications);
 
+      if(Invalid)
+        return null;
+
       // Persistir o cliente
-      
+      _repository.Save(customer);
+
       // Enviar um E-mail de boas vindas
+      _emailService.Send(email.Address, "hello@teste.com.br", "Bem vindo", "Seja bem vindo");
       
       // Retornar o resultado para tela
-      
-      return new CreateCustomerCommandResult(Guid.NewGuid(), name.ToString(), email.Address);
+      return new CreateCustomerCommandResult(customer.Id, name.ToString(), email.Address);
     }
 
     public ICommandResult Handle(AddAddressCommand command)

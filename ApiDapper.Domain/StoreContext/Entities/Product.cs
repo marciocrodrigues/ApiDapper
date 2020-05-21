@@ -1,8 +1,9 @@
+using ApiDapper.Shared.Entities;
 using FluentValidator;
 
 namespace ApiDapper.Domain.StoreContext.Entities
 {
-    public class Product : Notifiable
+    public class Product : Entity
     {
         public Product(string title,
                        string description,
