@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using ApiDapper.Domain.StoreContext.Entities;
+using ApiDapper.Domain.StoreContext.Queries;
 
 namespace ApiDapper.Domain.StoreContext.Repositories
 {
@@ -10,5 +13,9 @@ namespace ApiDapper.Domain.StoreContext.Repositories
         bool CheckDocument(string document);
         bool CheckEmail(string email);
         void Save(Customer customer);
+        CustomerOrdersCountResult GetCustomerOrdersCount(string document);
+        IEnumerable<ListCustomerQueryResult> Get();
+        GetCustomerQueryResult GetById(Guid id);
+        IEnumerable<ListCustomerOrdersQueryResult> GetOrders(Guid id);
     }
 }

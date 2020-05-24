@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using ApiDapper.Domain.StoreContext.Entities;
+using ApiDapper.Domain.StoreContext.Queries;
 using ApiDapper.Domain.StoreContext.Repositories;
 using ApiDapper.Infra.DataContexts;
 using Dapper;
@@ -38,6 +41,31 @@ namespace ApiDapper.Infra.StoreContext.Repositories
         .FirstOrDefault();
     }
 
+    public CustomerOrdersCountResult GetCustomerOrdersCount(string document)
+    {
+      return _context
+        .Connection
+        .Query<CustomerOrdersCountResult>(
+            "spGetCustomerOrdersCount",
+            new { Document = document },
+            commandType: CommandType.StoredProcedure)
+        .FirstOrDefault();
+    }
+
+    public IEnumerable<ListCustomerQueryResult> Get()
+    {
+      return _context
+        .Connection
+        .Query<ListCustomerQueryResult>(
+          @"SELECT [Id], 
+                  CONCAT([FirstName], ' ', [LastName]) AS Name, 
+                  [Document], [Email] 
+            FROM [Customer]",
+          new { },
+          commandType: CommandType.Text
+        ).ToList();
+    }
+
     public void Save(Customer customer)
     {
       _context.Connection.Execute("spCreateCustomer",
@@ -68,6 +96,40 @@ namespace ApiDapper.Infra.StoreContext.Repositories
              Type = address.Type,           
           }, commandType: CommandType.StoredProcedure);
       }
+    }
+
+    public GetCustomerQueryResult GetById(Guid id)
+    {
+      return _context
+        .Connection
+        .Query<GetCustomerQueryResult>(
+          @"SELECT [Id], 
+                   CONCAT([FirstName], ' ', [LastName]) AS Name, 
+                   [Document], 
+                   [Email] 
+            FROM [Customer]
+            WHERE [Id] = @Id",
+          new { Id = id },
+          commandType: CommandType.Text
+        ).FirstOrDefault();
+    }
+
+    public IEnumerable<ListCustomerOrdersQueryResult> GetOrders(Guid id)
+    {
+      return _context
+        .Connection
+        .Query<ListCustomerOrdersQueryResult>(@"SELECT Customer.Id,
+                                                       CONCAT(FirstName, ' ', LastName) AS Name,
+                                                       Document,
+                                                       Email,
+                                                       [Order].Id AS Number,
+                                                       OrderItem.Price
+                                                FROM Customer
+                                                     INNER JOIN [Order] ON [Order].[CustomerId] = [Customer].[Id]
+                                                     INNER JOIN OrderItem ON OrderItem.OrderId = [Order].Id
+                                                WHERE Customer.Id = @Id",
+        new {Id = id},
+        commandType: CommandType.Text);
     }
   }
 }

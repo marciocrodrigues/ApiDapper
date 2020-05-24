@@ -6,8 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="FluentValidator" Version="2.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ApiDapper.Domain\ApiDapper.Domain.csproj" />
+    <ProjectReference Include="..\ApiDapper.Shared\ApiDapper.Shared.csproj" />
+    <ProjectReference Include="..\ApiDapper.Infra\ApiDapper.Infra.csproj" />
   </ItemGroup>
 
 </Project>
