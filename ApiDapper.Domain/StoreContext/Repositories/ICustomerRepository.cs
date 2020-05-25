@@ -17,5 +17,7 @@ namespace ApiDapper.Domain.StoreContext.Repositories
         IEnumerable<ListCustomerQueryResult> Get();
         GetCustomerQueryResult GetById(Guid id);
         IEnumerable<ListCustomerOrdersQueryResult> GetOrders(Guid id);
+        void Update(Guid id, Customer customer);
+        void Delete(Guid id);
     }
 }

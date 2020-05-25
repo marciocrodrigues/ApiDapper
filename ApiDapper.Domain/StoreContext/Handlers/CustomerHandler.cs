@@ -46,16 +46,69 @@ namespace ApiDapper.Domain.StoreContext.Handlers
       AddNotifications(customer.Notifications);
 
       if(Invalid)
-        return null;
+        return new CommandResult(
+          false,
+          "Não foi possivel inserir novo cliente",
+          Notifications
+        );
 
       // Persistir o cliente
       _repository.Save(customer);
 
-      // Enviar um E-mail de boas vindas
-      _emailService.Send(email.Address, "hello@teste.com.br", "Bem vindo", "Seja bem vindo");
+      // Enviar um E-mail de boas vindas, implementar com algum serviço de envio
+      //_emailService.Send(email.Address, "hello@teste.com.br", "Bem vindo", "Seja bem vindo");
       
       // Retornar o resultado para tela
-      return new CreateCustomerCommandResult(customer.Id, name.ToString(), email.Address);
+      return new CommandResult(true, "Bem vindo", new { Id = customer.Id, Name = name, Email = email.Address });
+    }
+
+    public ICommandResult HandleUpdate(Guid id, CreateCustomerCommand command)
+    {
+      var name = new Name(command.FirstName, command.LastName);
+      var document = new Document(command.Document);
+      var email = new Email(command.Email);
+
+      var customer = new Customer(name, document, email, command.Phone);
+
+      if(Invalid)
+        return new CommandResult(
+          false,
+          "Não foi possivel alterar o cliente",
+          Notifications
+        );
+
+      _repository.Update(id, customer);
+      return new CommandResult(
+        true, 
+        "Alterado com sucesso", 
+        new { 
+          Id = customer.Id, 
+          Name = name, 
+          Document = document,
+          Email = email.Address, 
+          Phone = customer.Phone 
+        }
+      );
+    }
+
+    public ICommandResult HandleDelete(Guid id)
+    {
+      _repository.Delete(id);
+      var result = _repository.GetById(id);
+
+      if(result != null)
+        return new CommandResult(
+          false,
+          "Erro ao tentar remover cliente.",
+          new { Id = id }
+        );
+      
+      return new CommandResult(
+        true,
+        "Cliente removido com sucesso",
+        new { Id = id }
+      );
+
     }
 
     public ICommandResult Handle(AddAddressCommand command)

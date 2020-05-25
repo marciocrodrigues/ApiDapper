@@ -1,12 +1,10 @@
-using System;
 using ApiDapper.Shared.Commands;
 
 namespace ApiDapper.Domain.StoreContext.Commands.CustomerCommands.Outputs
 {
-  // Classe para receber o retorno do Handle criado
-  public class CreateCustomerCommandResult : ICommandResult
+  public class CommandResult : ICommandResult
   {
-    public CreateCustomerCommandResult(bool success, string message, object data)
+    public CommandResult(bool success, string message, object data)
     {
       this.Success = success;
       this.Message = message;

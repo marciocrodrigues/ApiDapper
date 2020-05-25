@@ -18,6 +18,11 @@ namespace ApiDapper.Tests.Fakes
       return false;
     }
 
+    public void Delete(Guid id)
+    {
+      throw new NotImplementedException();
+    }
+
     public IEnumerable<ListCustomerQueryResult> Get()
     {
       throw new System.NotImplementedException();
@@ -41,6 +46,11 @@ namespace ApiDapper.Tests.Fakes
     public void Save(Customer customer)
     {
         
+    }
+
+    public void Update(Guid id, Customer customer)
+    {
+      throw new NotImplementedException();
     }
   }
 }

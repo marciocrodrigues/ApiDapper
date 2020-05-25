@@ -131,5 +131,29 @@ namespace ApiDapper.Infra.StoreContext.Repositories
         new {Id = id},
         commandType: CommandType.Text);
     }
+
+    public void Update(Guid id, Customer customer)
+    {
+      _context.Connection.Execute("spUpdateCustomer",
+      new 
+      {
+          Id = id,
+          FirstName = customer.Name.FirstName,
+          LastName = customer.Name.LastName,
+          Document = customer.Document.Number,
+          Email = customer.Email.Address,
+          Phone = customer.Phone,
+      }, commandType: CommandType.StoredProcedure);
+    }
+
+    public void Delete(Guid id)
+    {
+      _context
+        .Connection
+        .Execute(@"DELETE FROM Customer WHERE Customer.Id = @Id",
+                 new { Id = id },
+                 commandType: CommandType.Text
+        );
+    }
   }
 }
